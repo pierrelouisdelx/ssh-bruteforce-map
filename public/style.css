@@ -1,0 +1,31 @@
+html {
+    background: black;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font: 16px/1.4 "Helvetica Neue", Arial, sans-serif;
+}
+.leaflet-popup-content-wrapper {
+    background: darkblue;
+    color: #fff;
+}
+
+#map {
+    width: 800px;
+    height: 600px;
+}
+
+.ghbtns {
+    position: relative;
+    top: 4px;
+    margin-left: 5px;
+}
+
+a {
+    color: #0077ff;
+}
