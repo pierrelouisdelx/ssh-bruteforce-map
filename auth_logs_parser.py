@@ -18,7 +18,10 @@ def parse_addr(line):
 
 # parse ipv4 from a line containing results password text
 def parse_fails_ipv4(line):
-    return re.search(r'(\bfrom\s)((\d{1,3}\.){3}\d{1,3})', line).group(2)
+    tmp = re.search(r'(\bfrom\s)((\d{1,3}\.){3}\d{1,3})', line)
+    if tmp:
+        return tmp.group(2)
+    return "0.0.0.0"
 
 def get_logs(file):
     failed = {}
@@ -47,8 +50,12 @@ def get_logs(file):
     return accepted, failed
 
 if __name__ == "__main__":
-    logs = open("/var/log/auth.log", "r")
+    logs = open("auth.log", "r")
     accepted, failed = get_logs(logs)
+
+    for key in list(failed):
+        if failed[key]['attempts'] < 10:
+            del failed[key]
 
     j = json.dumps(failed)
     print(j)
@@ -61,3 +68,5 @@ if __name__ == "__main__":
     #print("\n[ACCEPTED]")
     #for ip in accepted:
     #    print(ip)
+
+    logs.close()
