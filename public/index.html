@@ -38,14 +38,20 @@
 
             var logs = []
 
+            var icon = L.icon({
+                iconUrl: 'https://img.icons8.com/color/48/000000/marker--v1.png',
+                iconSize: [17.5, 20],
+                iconAnchor: [8.75, 0]
+            });
+
             function setMarkers() {
                 for (key of Object.keys(logs)) {
                     var popup = `IP: ${key}\nAttempts: ${logs[key]['attempts']}`;
-                    L.marker([logs[key]['lat'], logs[key]['lng']]).addTo(map).bindPopup(popup);
+                                L.marker([logs[key]['lat'], logs[key]['lng']], {icon: icon}).addTo(map).bindPopup(popup);
                 }
             }
 
-            fetch("http://localhost:3000/geoip")
+            fetch("/geoip")
                 .then(res => res.json())
                 .then(data => logs = data)
                 .then(() => setMarkers())
