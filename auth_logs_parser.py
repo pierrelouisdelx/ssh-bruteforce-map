@@ -50,7 +50,7 @@ def get_logs(file):
     return accepted, failed
 
 if __name__ == "__main__":
-    logs = open("auth.log", "r")
+    logs = open("/var/log/auth.log", "r")
     accepted, failed = get_logs(logs)
 
     for key in list(failed):
