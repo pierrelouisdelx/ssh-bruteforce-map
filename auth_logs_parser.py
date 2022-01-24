@@ -40,7 +40,10 @@ def get_logs(file):
         elif accepted_p in line:
             ip = parse_fails_ipv4(line)
             d = dict(failed)
-            del d[ip]
+            try:
+                del d[ip]
+            except KeyError:
+                pass
             if ip in accepted:
                 accepted[ip]["attempts"] += 1
             else:
