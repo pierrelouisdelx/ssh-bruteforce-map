@@ -8,6 +8,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
         <script src="heatmap.js"></script>
         <script src="leaflet-heatmap.js"></script>
+        <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
     </head>
     <body>
         <h1>SSH Bruteforce Map</h1>
@@ -33,7 +34,8 @@
             var map = new L.Map('map', {
                 center: new L.LatLng(25, 0),
                 zoom: 2,
-                layers: [Jawg_Matrix]
+                layers: [Jawg_Matrix],
+                fullscreenControl: true,
             });
 
             var logs = []
