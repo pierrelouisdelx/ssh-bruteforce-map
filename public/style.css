@@ -11,8 +11,9 @@ body {
     font: 16px/1.4 "Helvetica Neue", Arial, sans-serif;
 }
 .leaflet-popup-content-wrapper {
-    background: darkblue;
-    color: #fff;
+    background: rgba(26,26,26,0.75) !important;
+    color: #fff !important;
+    border: #f00 1px solid;
 }
 
 #map {
