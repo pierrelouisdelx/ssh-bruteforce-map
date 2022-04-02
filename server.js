@@ -7,12 +7,14 @@ const geoip = require('geoip-lite');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('/geoip', (req, res) => {
-    const util = require('util');
-    const spawn = require('child_process').spawn;
-    const logs = spawn('python3', ['auth_logs_parser.py']);
+const util = require('util');
+const spawn = require('child_process').spawn;
+var logs;
+var result;
 
-    var result = [];
+app.get('/geoip/length', (req, res) => {
+    logs = spawn('python3', ['auth_logs_parser.py']);
+
     var scriptOutput = "";
 
     logs.stdout.on('data', (data) => {
@@ -21,6 +23,7 @@ app.get('/geoip', (req, res) => {
     });
 
     logs.stdout.on('close', () => {
+        result = JSON.parse(scriptOutput);
         data = JSON.parse(scriptOutput);
         keys = Object.keys(data);
         for (key of keys) {
@@ -32,8 +35,12 @@ app.get('/geoip', (req, res) => {
                 data[key]['lng'] = geo.ll[1];
             }
         }
-        res.send(data);
+        res.send({"length" : data.length});
     });
+});
+
+app.get('/geoip/:n', (req, res) => {
+    res.send(result[req.params.n]);
 });
 
 http.listen(3000, () => {
