@@ -14,6 +14,11 @@ const db = mysql.createConnection({
     database : "ssh-bruteforce-map"
  });
 
+db.connect(function(err) {
+    if (err) throw err;
+});
+
+
 app.use('/', express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -53,19 +58,22 @@ const update = () => {
 }
 
 app.get('/geoip/length', (req, res) => {
-    db.connect(function(err) {
+    db.query("SELECT COUNT(*) FROM logs", function (err, result) {
         if (err) throw err;
-        db.query("SELECT COUNT(*) FROM logs", function (err, result) {
-            if (err) throw err;
-            var tmp = Object.values(JSON.parse(JSON.stringify(result)))
-            tmp = tmp[0]['COUNT(*)']
-            res.send({"n" : tmp})
-        });
+        var tmp = Object.values(JSON.parse(JSON.stringify(result)))
+        tmp = tmp[0]['COUNT(*)']
+        res.send({"n" : tmp})
     });
 });
 
 app.get('/geoip/:n', (req, res) => {
-    res.send(result[req.params.n]);
+    const sql = "SELECT * FROM logs WHERE id = " + mysql.escape(req.params.n);
+    db.query(sql, function (err, result) {
+        if (err) throw err;
+        var data = Object.values(JSON.parse(JSON.stringify(result)))
+        res.send(data[0]);
+    });
+
 });
 
 http.listen(3000, () => {
