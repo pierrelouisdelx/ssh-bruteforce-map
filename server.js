@@ -3,16 +3,25 @@ const app = express();
 const http = require('http').Server(app);
 const bodyParser = require("body-parser");
 const geoip = require('geoip-lite');
+const mysql = require('mysql');
+const util = require('util');
+const spawn = require('child_process').spawn;
+
+const db = mysql.createConnection({
+    host: "localhost",
+    user: "",
+    password: "",
+    database : "ssh-bruteforce-map"
+ });
+
+app.use('/', express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const util = require('util');
-const spawn = require('child_process').spawn;
-var logs;
-var result;
+var sql = "INSERT INTO logs (ip, lat, lng, attempts, date) VALUES (?)";
 
-app.get('/geoip/length', (req, res) => {
+const update = () => {
     logs = spawn('python3', ['auth_logs_parser.py']);
 
     var scriptOutput = "";
@@ -34,8 +43,24 @@ app.get('/geoip/length', (req, res) => {
                 data[key]['lat'] = geo.ll[0];
                 data[key]['lng'] = geo.ll[1];
             }
+            const tmp = data[key];
+            const val = [key, tmp['lat'], tmp['lng'], tmp['attempts'], tmp['date']];
+            db.query(sql, [val], function (err, result) {
+                if (err) throw err;
+            });
         }
-        res.send({"length" : data.length});
+    });
+}
+
+app.get('/geoip/length', (req, res) => {
+    db.connect(function(err) {
+        if (err) throw err;
+        db.query("SELECT COUNT(*) FROM logs", function (err, result) {
+            if (err) throw err;
+            var tmp = Object.values(JSON.parse(JSON.stringify(result)))
+            tmp = tmp[0]['COUNT(*)']
+            res.send({"n" : tmp})
+        });
     });
 });
 
