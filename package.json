@@ -21,6 +21,7 @@
     "express": "^4.17.2",
     "geoip-lite": "^1.4.3",
     "http": "^0.0.1-security",
-    "mysql2": "^2.3.3"
+    "mysql2": "^2.3.3",
+    "node-schedule": "^2.1.0"
   }
 }

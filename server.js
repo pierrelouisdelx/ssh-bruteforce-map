@@ -6,6 +6,7 @@ const geoip = require('geoip-lite');
 const mysql = require('mysql2');
 const util = require('util');
 const spawn = require('child_process').spawn;
+const schedule = require('node-schedule');
 
 const db = require('./config.js');
 
@@ -60,7 +61,6 @@ const update = () => {
 }
 
 app.get('/geoip/length', (req, res) => {
-    update()
     db.query("SELECT COUNT(*) FROM logs", function (err, result) {
         if (err) throw err;
         var tmp = Object.values(JSON.parse(JSON.stringify(result)))
@@ -77,6 +77,13 @@ app.get('/geoip/:n', (req, res) => {
         res.send(data[0]);
     });
 });
+
+schedule.scheduleJob('* * */6 * * *', function() {
+    update();
+});
+
+// Update at first run then every 6 hours
+update();
 
 http.listen(3001, () => {
     console.log("Server is listening on port 3001");
