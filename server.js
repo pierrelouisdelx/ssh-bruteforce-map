@@ -7,17 +7,11 @@ const mysql = require('mysql');
 const util = require('util');
 const spawn = require('child_process').spawn;
 
-const db = mysql.createConnection({
-    host: "localhost",
-    user: "",
-    password: "",
-    database : "ssh-bruteforce-map"
- });
+const db = require('./config.js');
 
 db.connect(function(err) {
     if (err) throw err;
 });
-
 
 app.use('/', express.static(__dirname + '/public'));
 
@@ -47,12 +41,13 @@ const update = () => {
             else {
                 data[key]['lat'] = geo.ll[0];
                 data[key]['lng'] = geo.ll[1];
+
+                const tmp = data[key];
+                const val = [key, tmp['lat'], tmp['lng'], tmp['attempts'], tmp['date']];
+                db.query(sql, [val], function (err, result) {
+                    if (err) throw err;
+                });
             }
-            const tmp = data[key];
-            const val = [key, tmp['lat'], tmp['lng'], tmp['attempts'], tmp['date']];
-            db.query(sql, [val], function (err, result) {
-                if (err) throw err;
-            });
         }
     });
 }
