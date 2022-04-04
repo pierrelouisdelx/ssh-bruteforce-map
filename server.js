@@ -44,8 +44,15 @@ const update = () => {
 
                 const tmp = data[key];
                 const val = [key, tmp['lat'], tmp['lng'], tmp['attempts'], tmp['date']];
-                db.query(sql, [val], function (err, result) {
+
+                var check = "SELECT COUNT(*) as c from logs WHERE ip=" + mysql.escape(key) + " and date=" + mysql.escape(tmp['date']);
+                db.query(check, function (err, res) {
                     if (err) throw err;
+                    if (res[0].c == 0) {
+                        db.query(sql, [val], function (error, result) {
+                            if (error) throw error
+                        });
+                    }
                 });
             }
         }
@@ -53,6 +60,7 @@ const update = () => {
 }
 
 app.get('/geoip/length', (req, res) => {
+    update()
     db.query("SELECT COUNT(*) FROM logs", function (err, result) {
         if (err) throw err;
         var tmp = Object.values(JSON.parse(JSON.stringify(result)))
@@ -68,7 +76,6 @@ app.get('/geoip/:n', (req, res) => {
         var data = Object.values(JSON.parse(JSON.stringify(result)))
         res.send(data[0]);
     });
-
 });
 
 http.listen(3001, () => {
