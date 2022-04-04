@@ -3,7 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const bodyParser = require("body-parser");
 const geoip = require('geoip-lite');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const util = require('util');
 const spawn = require('child_process').spawn;
 
@@ -71,6 +71,6 @@ app.get('/geoip/:n', (req, res) => {
 
 });
 
-http.listen(3000, () => {
-    console.log("Server is listening on port 3000");
+http.listen(3001, () => {
+    console.log("Server is listening on port 3001");
 });
