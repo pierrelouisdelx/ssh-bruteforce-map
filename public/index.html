@@ -33,7 +33,7 @@
             var map = new L.Map('map', {
                 center: new L.LatLng(25, 0),
                 zoom: 2,
-                layers: [Jawg_Matrix],
+                layers: [Jawg_Matrix]
             });
 
             var icon = L.icon({
@@ -47,10 +47,10 @@
                 L.marker([data.lat, data.lng], {icon: icon}).addTo(map).bindPopup(popup);
             }
 
-            async function setMarkers(data) {
+            function setMarkers(data) {
                 let n = data.n;
                 for (let i = 0; i < n; i++) {
-                    await fetch('/geoip/' + i)
+                    fetch('/geoip/' + i)
                         .then(res => res.json())
                         .then(data => setMarker(data))
                 }
