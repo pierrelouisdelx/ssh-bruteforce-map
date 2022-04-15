@@ -9,10 +9,6 @@ const spawn = require('child_process').spawn;
 
 const db = require('./config.js');
 
-db.connect(function(err) {schedule.scheduleJob('* * */6 * * *', function() {
-    update();
-});
-
 // Update at first run then every 6 hours
 update();
     if (err) throw err;
