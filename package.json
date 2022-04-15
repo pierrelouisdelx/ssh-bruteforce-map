@@ -19,9 +19,8 @@
   "dependencies": {
     "body-parser": "^1.19.1",
     "express": "^4.17.2",
-    "geoip-lite": "^1.4.3",
+    "geoip-lite": "^1.4.2",
     "http": "^0.0.1-security",
-    "mysql2": "^2.3.3",
-    "node-schedule": "^2.1.0"
+    "mysql2": "^2.3.3"
   }
 }

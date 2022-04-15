@@ -78,9 +78,7 @@ app.get('/geoip/:n', (req, res) => {
     });
 });
 
-schedule.scheduleJob('* * */6 * * *', function() {
-    update();
-});
+setInterval(update, 21600); // Update every 6 hours
 
 // Update at first run then every 6 hours
 update();
