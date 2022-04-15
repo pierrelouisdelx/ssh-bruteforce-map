@@ -6,11 +6,15 @@ const geoip = require('geoip-lite');
 const mysql = require('mysql2');
 const util = require('util');
 const spawn = require('child_process').spawn;
-const schedule = require('node-schedule');
 
 const db = require('./config.js');
 
-db.connect(function(err) {
+db.connect(function(err) {schedule.scheduleJob('* * */6 * * *', function() {
+    update();
+});
+
+// Update at first run then every 6 hours
+update();
     if (err) throw err;
 });
 
