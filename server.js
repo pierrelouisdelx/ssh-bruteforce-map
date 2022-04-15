@@ -9,11 +9,6 @@ const spawn = require('child_process').spawn;
 
 const db = require('./config.js');
 
-// Update at first run then every 6 hours
-update();
-    if (err) throw err;
-});
-
 app.use('/', express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
