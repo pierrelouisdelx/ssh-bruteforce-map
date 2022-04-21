@@ -50,8 +50,8 @@
             function setMarkers(data) {
                 let n = data.n;
                 let start = 0;
-                if (n >= 100)
-                    start = n - 100;
+                if (n >= 1000)
+                    start = n - 1000;
 
                 for (let i = start; i < n; i++) {
                     fetch('/geoip/' + i)
