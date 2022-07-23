@@ -27,7 +27,7 @@ function App() {
 
     useEffect(() => {
         fetch('/api/getData').then(res => res.json()).then(data => setData(data));
-    });
+    }, []);
 
     return (
         <div className="App">

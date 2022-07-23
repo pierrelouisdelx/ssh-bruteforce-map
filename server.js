@@ -7,9 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 // SSH logs file path
-const SSH_LOGS = '/var/log/auth.log';
-
-app.use('/', express.static(__dirname + '/public'));
+const SSH_LOGS = process.env.NODE_ENV === 'production' ? '/var/log/auth.log' : './logs.txt';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
