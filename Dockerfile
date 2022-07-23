@@ -9,7 +9,6 @@ COPY server.js ./
 COPY db.sqlite3 ./
 COPY src/ ./src
 COPY public ./public
-COPY logs.txt ./
 
 RUN npm run build
 
