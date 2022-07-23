@@ -1,13 +1,8 @@
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
 const bodyParser = require("body-parser");
 const geoip = require('geoip-lite');
-const mysql = require('mysql2');
-const util = require('util');
-const spawn = require('child_process').spawn;
-
-const db = require('./config.js');
+const sqlite3 = require('sqlite3').verbose();
 
 app.use('/', express.static(__dirname + '/public'));
 
@@ -55,21 +50,12 @@ const update = () => {
     });
 }
 
-app.get('/geoip/length', (req, res) => {
-    db.query("SELECT COUNT(*) FROM logs", function (err, result) {
-        if (err) throw err;
-        var tmp = Object.values(JSON.parse(JSON.stringify(result)))
-        tmp = tmp[0]['COUNT(*)']
-        res.send({"n" : tmp})
-    });
-});
-
-app.get('/geoip/:n', (req, res) => {
-    const sql = "SELECT * FROM logs WHERE id = " + mysql.escape(req.params.n);
+app.get('/api/getData', (req, res) => {
+    const sql = "SELECT * FROM logs LIMIT 100";
     db.query(sql, function (err, result) {
         if (err) throw err;
         var data = Object.values(JSON.parse(JSON.stringify(result)))
-        res.send(data[0]);
+        res.send(data);
     });
 });
 

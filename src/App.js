@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet';
 import './App.css';
@@ -23,7 +23,11 @@ function App() {
     const accessToken = 'robwSG8HiMYNPewxsT3oytycdnlivt23wW3EZvNk9a9V3yU6pj9QhnTtNVIovcVw';
     const position = [51.505, -0.09]
 
-    const [data, setData] = useState([{lat: 10, lng: 10, ip: '123.456.789.123', attempts: 10}]);
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/getData').then(res => res.json()).then(data => setData(data));
+    });
 
     return (
         <div className="App">

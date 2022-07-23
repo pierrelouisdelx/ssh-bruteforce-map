@@ -1,68 +1,43 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Bruteforce Heat Map</title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="style.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
-        <script src="heatmap.js"></script>
-        <script src="leaflet-heatmap.js"></script>
-    </head>
-    <body>
-        <h1>SSH Bruteforce Map</h1>
-        <div id="map"></div>
-        <script>
-            var Jawg_Matrix = L.tileLayer('https://{s}.tile.jawg.io/jawg-matrix/{z}/{x}/{y}.png?access-token={accessToken}', {
-                attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                minZoom: 3,
-                maxZoom: 22,
-                accessToken: 'robwSG8HiMYNPewxsT3oytycdnlivt23wW3EZvNk9a9V3yU6pj9QhnTtNVIovcVw'
-            });
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
 
-            var cfg = {
-                "radius": 2,
-                "maxOpacity": .8,
-                "scaleRadius": true,
-                "useLocalExtrema": true,
-                latField: 'lat',
-                lngField: 'lng',
-                valueField: 'count'
-            };
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
 
-            var map = new L.Map('map', {
-                center: new L.LatLng(25, 0),
-                zoom: 2,
-                layers: [Jawg_Matrix]
-            });
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
 
-            var icon = L.icon({
-                iconUrl: 'https://img.icons8.com/color/48/000000/marker--v1.png',
-                iconSize: [17.5, 20],
-                iconAnchor: [8.75, 0]
-            });
-
-            function setMarker(data) {
-                var popup = `IP: ${data.ip}\nAttempts: ${data.attempts}`;
-                L.marker([data.lat, data.lng], {icon: icon}).addTo(map).bindPopup(popup);
-            }
-
-            function setMarkers(data) {
-                let n = data.n;
-                let start = 0;
-                if (n >= 1000)
-                    start = n - 1000;
-
-                for (let i = start; i < n; i++) {
-                    fetch('/geoip/' + i)
-                        .then(res => res.json())
-                        .then(data => setMarker(data))
-                }
-            }
-
-            fetch("/geoip/length")
-                .then(res => res.json())
-                .then(data => setMarkers(data))
-        </script>
-    </body>
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
 </html>

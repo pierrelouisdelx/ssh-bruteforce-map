@@ -1,26 +1,41 @@
 {
-  "name": "ssh-bruteforce-map",
-  "version": "1.0.0",
-  "description": "This is a simple gui for viewing ssh failed logs",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pierrelouisdelx/ssh-bruteforce-map.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/pierrelouisdelx/ssh-bruteforce-map/issues"
-  },
-  "homepage": "https://github.com/pierrelouisdelx/ssh-bruteforce-map#readme",
+  "name": "sshreact",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "body-parser": "^1.19.1",
     "express": "^4.17.2",
     "geoip-lite": "^1.4.2",
-    "http": "^0.0.1-security",
-    "mysql2": "^2.3.3"
+    "leaflet": "^1.8.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-leaflet": "^4.0.1",
+    "react-scripts": "5.0.1",
+    "sqlite3": "^5.0.10"
+  },
+  "scripts": {
+    "start": "BROWSER=NONE react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
