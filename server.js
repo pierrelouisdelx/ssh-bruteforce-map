@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const geoip = require('geoip-lite');
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
+const path = require('path');
 
 // SSH logs file path
 const SSH_LOGS = '/var/log/auth.log';
