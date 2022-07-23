@@ -35,7 +35,7 @@ const parser = () => {
             let geo = geoip.lookup(ip);
             let lat = 0;
             let lng = 0;
-            if (geo.ll !== undefined) {
+            if (geo !== undefined) {
                 lat = geo.ll[0];
                 lng = geo.ll[1];
             }
