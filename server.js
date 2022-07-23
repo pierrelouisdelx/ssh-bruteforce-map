@@ -6,7 +6,7 @@ const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 
 // SSH logs file path
-const SSH_LOGS = 'logs.txt';
+const SSH_LOGS = '/var/log/auth.log';
 
 app.use('/', express.static(__dirname + '/public'));
 
