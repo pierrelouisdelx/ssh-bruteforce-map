@@ -33,8 +33,12 @@ const parser = () => {
 
             // Get location
             let geo = geoip.lookup(ip);
-            let lat = geo.ll[0];
-            let lng = geo.ll[1];
+            let lat = 0;
+            let lng = 0;
+            if (geo.ll !== undefined) {
+                lat = geo.ll[0];
+                lng = geo.ll[1];
+            }
 
             // Get date
             let date = line.match(/^[a-zA-Z]{3}(\s+)[\d]{1,2}(\s+)[\d]{2}:[\d]{2}:[\d]{2}/)[0];
