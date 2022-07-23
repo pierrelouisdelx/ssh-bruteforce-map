@@ -5,6 +5,9 @@ const geoip = require('geoip-lite');
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 
+// SSH logs file path
+const SSH_LOGS = '';
+
 app.use('/', express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,7 +20,7 @@ var insert = "INSERT INTO logs (ip, lat, lng, attempts, date) VALUES (?, ?, ?, ?
 
 const parser = () => {
     const failed = 'Failed password for';
-    let f = fs.readFileSync('logs.txt', 'utf8');
+    let f = fs.readFileSync(SSH_LOGS, 'utf8');
     let lines = f.split('\n');
 
     console.log('[+] Parsing logs...');
