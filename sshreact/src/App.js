@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet';
 import './App.css';
@@ -11,8 +12,8 @@ L.Icon.Default.mergeOptions({
     iconRetinaUrl: marker,
     iconUrl: marker,
     iconSize: [17.5, 20],
-    iconAnchor: null,
-    popupAnchor: null,
+    iconAnchor: new L.Point(0, 0),
+    popupAnchor: new L.Point(8, 0),
     shadowUrl: null,
     shadowSize: null,
     shadowAnchor: null,
@@ -21,21 +22,35 @@ L.Icon.Default.mergeOptions({
 function App() {
     const accessToken = 'robwSG8HiMYNPewxsT3oytycdnlivt23wW3EZvNk9a9V3yU6pj9QhnTtNVIovcVw';
     const position = [51.505, -0.09]
+
+    const [data, setData] = useState([{lat: 10, lng: 10, ip: '123.456.789.123', attempts: 10}]);
+
     return (
         <div className="App">
             <h1>SSH Bruteforce Map</h1>
             <MapContainer 
                 center={[25, 0]} 
                 zoom={2} 
-                className='map'>
+                className='map'
+                minZoom={2}
+            >
                 <TileLayer
                     url={`https://{s}.tile.jawg.io/jawg-matrix/{z}/{x}/{y}.png?access-token=${accessToken}`}
                 />
-                <Marker position={position}>
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
+                {
+                    data.map((d, i) => (
+                        <Marker
+                            key = {i}
+                            position={[d.lat, d.lng]}
+                        >
+                            <Popup>
+                                <span>
+                                    IP: {d.ip} <br /> Attempts: {d.attempts}
+                                </span>
+                            </Popup>
+                        </Marker>
+                    ))
+                }
             </MapContainer>
         </div>
     );
