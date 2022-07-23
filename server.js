@@ -6,7 +6,7 @@ const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 
 // SSH logs file path
-const SSH_LOGS = '';
+const SSH_LOGS = 'logs.txt';
 
 app.use('/', express.static(__dirname + '/public'));
 
@@ -38,6 +38,7 @@ const parser = () => {
 
             // Get date
             let date = line.match(/^[a-zA-Z]{3}(\s+)[\d]{1,2}(\s+)[\d]{2}:[\d]{2}:[\d]{2}/)[0];
+            let timestamp = Date.parse(date);
 
             // Check if ip is already in database
             db.all(check, [ip], function (err, res) {
@@ -46,7 +47,7 @@ const parser = () => {
                 } else {
                     // If ip is not in database, insert it
                     if (res[0].c == 0)
-                        db.run(insert, [ip, lat, lng, 1, date]);
+                        db.run(insert, [ip, lat, lng, 1, timestamp]);
                     else // If ip is in database, update it
                         db.run(update, [ip]);
                 }
