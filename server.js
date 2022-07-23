@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 // SSH logs file path
-const SSH_LOGS = process.env.NODE_ENV === 'production' ? '/var/log/auth.log' : './logs.txt';
+const SSH_LOGS = './logs.txt';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -18,6 +18,7 @@ var update = "UPDATE logs SET attempts=attempts+1 WHERE ip=?";
 var insert = "INSERT INTO logs (ip, lat, lng, attempts, date) VALUES (?, ?, ?, ?, ?)";
 
 const parser = () => {
+    let data = {}
     const failed = 'Failed password for';
     let f = fs.readFileSync(SSH_LOGS, 'utf8');
     let lines = f.split('\n');
@@ -43,7 +44,27 @@ const parser = () => {
             let date = line.match(/^[a-zA-Z]{3}(\s+)[\d]{1,2}(\s+)[\d]{2}:[\d]{2}:[\d]{2}/)[0];
             let timestamp = Date.parse(date);
 
-            // Check if ip is already in database
+            if (data[ip] === undefined) {
+                data[ip] = {};
+                data[ip].lat = lat;
+                data[ip].lng = lng;
+                data[ip].attempts = 1;
+                data[ip].timestamp = timestamp;
+            }
+            else {
+                data[ip].attempts++;
+            }
+        }
+    });
+
+    // Check if ip is already in database
+    db.serialize(() => {
+        for (let ip in data) {
+            let lat = data[ip].lat;
+            let lng = data[ip].lng;
+            let attempts = data[ip].attempts;
+            let timestamp = data[ip].timestamp;
+
             db.all(check, [ip], function (err, res) {
                 if (err) {
                     console.log(err);
@@ -57,6 +78,7 @@ const parser = () => {
             });
         }
     });
+
     console.log('[+] Parsing logs... done!');
 }
 
@@ -70,8 +92,6 @@ app.get('/api/getData', (req, res) => {
         res.send(data);
     });
 });
-
-setInterval(parser, 21600); // Update every 6 hours
 
 // Update at first run then every 6 hours
 parser();
