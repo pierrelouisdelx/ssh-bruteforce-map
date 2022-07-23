@@ -1,12 +1,14 @@
 FROM node:18-slim
 
 WORKDIR /app/
-COPY package.json ./
-COPY server.js ./
 
+COPY package.json ./
 RUN npm install
+
+COPY server.js ./
 COPY src/ ./src
 COPY public ./public
+
 RUN npm run build
 
 ENV NODE_ENV=production
