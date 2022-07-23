@@ -73,6 +73,16 @@ setInterval(parser, 21600); // Update every 6 hours
 // Update at first run then every 6 hours
 parser();
 
-app.listen(3001, () => {
+if (process.env.NODE_ENV === 'production') {
+    console.log('[+] Production')
+    let root = path.join(__dirname, 'build');
+    app.use(express.static(root));
+    app.use('/*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    });
+}
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
     console.log("Server is listening on port 3001");
 });
