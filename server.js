@@ -23,21 +23,28 @@ const parser = () => {
     console.log('[+] Parsing logs...');
 
     lines.forEach(line => {
+        // Check if line is a failed login
         if (line.includes(failed)) {
+            // Get ip address
             let ip = line.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)[0];
+
+            // Get location
             let geo = geoip.lookup(ip);
             let lat = geo.ll[0];
             let lng = geo.ll[1];
-            let user = line.match(/for (\binvalid\suser\s)?(\w+)/)[1];
+
+            // Get date
             let date = line.match(/^[a-zA-Z]{3}(\s+)[\d]{1,2}(\s+)[\d]{2}:[\d]{2}:[\d]{2}/)[0];
 
+            // Check if ip is already in database
             db.all(check, [ip], function (err, res) {
                 if (err) {
                     console.log(err);
                 } else {
+                    // If ip is not in database, insert it
                     if (res[0].c == 0)
                         db.run(insert, [ip, lat, lng, 1, date]);
-                    else
+                    else // If ip is in database, update it
                         db.run(update, [ip]);
                 }
             });
@@ -48,6 +55,7 @@ const parser = () => {
 
 
 app.get('/api/getData', (req, res) => {
+    // Get data from database
     const sql = "SELECT * FROM logs WHERE attempts > 10 LIMIT 100";
     db.all(sql, function (err, result) {
         if (err) throw err;
