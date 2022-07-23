@@ -6,6 +6,7 @@ COPY package.json ./
 RUN npm install
 
 COPY server.js ./
+COPY db.sqlite3 ./
 COPY src/ ./src
 COPY public ./public
 
