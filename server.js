@@ -3,67 +3,64 @@ const app = express();
 const bodyParser = require("body-parser");
 const geoip = require('geoip-lite');
 const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
 
 app.use('/', express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var sql = "INSERT INTO logs (ip, lat, lng, attempts, date) VALUES (?)";
+const db = new sqlite3.Database('db.sqlite3');
+var check = "SELECT COUNT(*) as c FROM logs WHERE ip=?";
+var update = "UPDATE logs SET attempts=attempts+1 WHERE ip=?";
+var insert = "INSERT INTO logs (ip, lat, lng, attempts, date) VALUES (?, ?, ?, ?, ?)";
 
-const update = () => {
-    logs = spawn('python3', ['auth_logs_parser.py']);
+const parser = () => {
+    const failed = 'Failed password for';
+    let f = fs.readFileSync('logs.txt', 'utf8');
+    let lines = f.split('\n');
 
-    var scriptOutput = "";
+    console.log('[+] Parsing logs...');
 
-    logs.stdout.on('data', (data) => {
-        data = data.toString();
-        scriptOutput += data;
-    });
+    lines.forEach(line => {
+        if (line.includes(failed)) {
+            let ip = line.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)[0];
+            let geo = geoip.lookup(ip);
+            let lat = geo.ll[0];
+            let lng = geo.ll[1];
+            let user = line.match(/for (\binvalid\suser\s)?(\w+)/)[1];
+            let date = line.match(/^[a-zA-Z]{3}(\s+)[\d]{1,2}(\s+)[\d]{2}:[\d]{2}:[\d]{2}/)[0];
 
-    logs.stdout.on('close', () => {
-        result = JSON.parse(scriptOutput);
-        data = JSON.parse(scriptOutput);
-        keys = Object.keys(data);
-        for (key of keys) {
-            var geo = geoip.lookup(key);
-            if (geo == null)
-                delete data[key]
-            else {
-                data[key]['lat'] = geo.ll[0];
-                data[key]['lng'] = geo.ll[1];
-
-                const tmp = data[key];
-                const val = [key, tmp['lat'], tmp['lng'], tmp['attempts'], tmp['date']];
-
-                var check = "SELECT COUNT(*) as c from logs WHERE ip=" + mysql.escape(key) + " and date=" + mysql.escape(tmp['date']);
-                db.query(check, function (err, res) {
-                    if (err) throw err;
-                    if (res[0].c == 0) {
-                        db.query(sql, [val], function (error, result) {
-                            if (error) throw error
-                        });
-                    }
-                });
-            }
+            db.all(check, [ip], function (err, res) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    if (res[0].c == 0)
+                        db.run(insert, [ip, lat, lng, 1, date]);
+                    else
+                        db.run(update, [ip]);
+                }
+            });
         }
     });
+    console.log('[+] Parsing logs... done!');
 }
 
+
 app.get('/api/getData', (req, res) => {
-    const sql = "SELECT * FROM logs LIMIT 100";
-    db.query(sql, function (err, result) {
+    const sql = "SELECT * FROM logs WHERE attempts > 10 LIMIT 100";
+    db.all(sql, function (err, result) {
         if (err) throw err;
-        var data = Object.values(JSON.parse(JSON.stringify(result)))
+        var data = Object.values(result)
         res.send(data);
     });
 });
 
-setInterval(update, 21600); // Update every 6 hours
+setInterval(parser, 21600); // Update every 6 hours
 
 // Update at first run then every 6 hours
-update();
+parser();
 
-http.listen(3001, () => {
+app.listen(3001, () => {
     console.log("Server is listening on port 3001");
 });
