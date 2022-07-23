@@ -16,7 +16,7 @@
     "mysql2": "^2.3.3"
   },
   "scripts": {
-    "start": "Browser=NONE react-scripts start",
+    "start": "BROWSER=NONE react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
