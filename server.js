@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 // SSH logs file path
-const SSH_LOGS = './logs.txt';
+const SSH_LOGS = process.env.NODE_ENV === 'production' ? '/var/log/auth.log' : './logs.txt';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -71,7 +71,7 @@ const parser = () => {
                 } else {
                     // If ip is not in database, insert it
                     if (res[0].c == 0)
-                        db.run(insert, [ip, lat, lng, 1, timestamp]);
+                        db.run(insert, [ip, lat, lng, attempts, timestamp]);
                     else // If ip is in database, update it
                         db.run(update, [ip]);
                 }
