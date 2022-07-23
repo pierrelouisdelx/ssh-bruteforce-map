@@ -8,9 +8,14 @@ import marker from './img/marker.png';
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
+    iconRetinaUrl: marker,
     iconUrl: marker,
     iconSize: [17.5, 20],
-    iconAnchor: [8.75, 0]
+    iconAnchor: null,
+    popupAnchor: null,
+    shadowUrl: null,
+    shadowSize: null,
+    shadowAnchor: null,
 });
 
 function App() {
