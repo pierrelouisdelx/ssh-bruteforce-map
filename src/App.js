@@ -26,6 +26,7 @@ function App() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
+        document.title = 'SSH Bruteforce Map';
         fetch('/api/getData').then(res => res.json()).then(data => setData(data));
     }, []);
 
